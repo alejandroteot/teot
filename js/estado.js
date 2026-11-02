@@ -10,6 +10,7 @@ export const estado = {
   carrito: {},                  // { productoId: cantidad }
   cantidades: {},               // cantidad elegida en la solapa Stock
   seleccion: new Set(),         // productos marcados en la solapa Stock
+  busquedaStock: '',            // texto del buscador de la solapa Stock
   categoriaSeleccionada: 'todas', // 'todas' | 'sin' | id de una categoría
   mesSeleccionado: null,
 };

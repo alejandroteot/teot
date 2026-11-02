@@ -5,20 +5,44 @@ import { fotosDe } from '../datos/fotos.js';
 import { opcionesCategorias } from './categorias.js';
 import { ajustar, guardarPrecios, pedirEliminar, agregarFotos, cambiarCategoria } from './stock-acciones.js';
 
+// Quita acentos y mayúsculas para que la búsqueda sea tolerante
+function normalizar(texto){
+  return String(texto ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+
+// Productos que coinciden con el buscador (por nombre o por categoría)
+export function productosVisibles(){
+  const q = normalizar(estado.busquedaStock);
+  const nombreCategoria = id => normalizar(estado.categorias.find(c => c.id === id)?.nombre);
+  return estado.productos.filter(p =>
+    !q || normalizar(p.nombre).includes(q) || nombreCategoria(p.categoria_id).includes(q));
+}
+
 export function renderStock(){
   // Quita de la selección los productos que ya no existen
   estado.seleccion = new Set([...estado.seleccion].filter(id => estado.productos.some(p => p.id === id)));
-  $('#tabla-stock').innerHTML = estado.productos.length
-    ? estado.productos.map(filaProducto).join('')
-    : '<p class="vacio">Todavía no hay productos. Cargá el primero arriba.</p>';
+
+  const visibles = productosVisibles();
+  const total = estado.productos.length;
+  $('#conteo-stock').textContent = !total ? ''
+    : visibles.length === total ? `${total} productos`
+    : `Mostrando ${visibles.length} de ${total}`;
+
+  $('#tabla-stock').innerHTML = !total
+    ? '<p class="vacio">Todavía no hay productos. Cargá el primero arriba.</p>'
+    : visibles.length
+      ? visibles.map(filaProducto).join('')
+      : '<p class="vacio">No hay productos que coincidan con la búsqueda.</p>';
   actualizarBarra();
 }
 
-// Actualiza el contador de la barra de selección
+// Contador de la barra de selección. "Seleccionar visibles" refleja solo la lista filtrada.
 export function actualizarBarra(){
   const n = estado.seleccion.size;
+  const visibles = productosVisibles();
+  const marcados = visibles.filter(p => estado.seleccion.has(p.id)).length;
   $('#sel-count').textContent = n === 1 ? '1 seleccionado' : `${n} seleccionados`;
-  $('#sel-todos').checked = estado.productos.length > 0 && n === estado.productos.length;
+  $('#sel-todos').checked = visibles.length > 0 && marcados === visibles.length;
 }
 
 // Precio para la lista de stock: si hay oferta, muestra el normal y el de oferta
@@ -57,6 +81,12 @@ function filaProducto(p){
 export function initStock(){
   const tabla = $('#tabla-stock');
 
+  // El buscador filtra la lista sin perder lo que se estaba escribiendo
+  $('#buscar-stock').addEventListener('input', e => {
+    estado.busquedaStock = e.target.value;
+    renderStock();
+  });
+
   tabla.addEventListener('input', e => {
     const i = e.target.closest('input[data-cant]');
     if (i) estado.cantidades[i.dataset.cant] = i.value;
@@ -91,8 +121,12 @@ export function initStock(){
     conBloqueo(() => agregarFotos(id, archivos));
   });
 
+  // Marca o desmarca solo los productos que se ven con el buscador
   $('#sel-todos').addEventListener('change', e => {
-    estado.seleccion = new Set(e.target.checked ? estado.productos.map(p => p.id) : []);
+    for (const p of productosVisibles()){
+      if (e.target.checked) estado.seleccion.add(p.id);
+      else estado.seleccion.delete(p.id);
+    }
     renderStock();
   });
 

@@ -105,3 +105,10 @@ Para publicar cualquier cambio, volvé a ejecutar `bash scripts/publicar.sh`. Gi
 - En el catálogo, el precio normal aparece tachado en gris, al lado el precio de oferta y el porcentaje de descuento en verde.
 - El carrito, el mensaje de WhatsApp y las ventas usan el precio final.
 - Archivos: `supabase/ofertas.sql` (base, correr después de `fotos.sql`), `css/ofertas.css`.
+
+## Buscador de stock
+
+- En la solapa **Stock** hay un buscador arriba de la lista. Busca por nombre o por categoría, sin distinguir mayúsculas ni acentos.
+- Cada producto es una tarjeta separada, para encontrarlo y editarlo más fácil, también en el celular.
+- **Seleccionar visibles** marca solo los productos que están filtrados por la búsqueda.
+- Archivos: `css/admin-stock.css`, `js/personal/stock.js`.

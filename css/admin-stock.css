@@ -1,0 +1,34 @@
+/* Administración: buscador y lista de stock con espacio entre productos, pensada también para celular */
+
+#buscar-stock{width:100%;margin-bottom:10px}
+#conteo-stock{margin:0 0 14px;font-size:14px;color:var(--muted)}
+
+/* Cada producto es una tarjeta separada de las demás */
+#tabla-stock{display:grid;gap:18px}
+#tabla-stock .fila{position:relative;border:1px solid var(--line);border-radius:20px;padding:18px;background:var(--paper);display:flex;flex-wrap:wrap;gap:14px 16px;align-items:center;justify-content:space-between}
+#tabla-stock .sel-wrap{position:absolute;top:16px;right:16px}
+#tabla-stock .info{flex:1 1 100%;flex-direction:column;padding-right:36px}
+#tabla-stock .info strong{font-size:20px}
+
+/* Precios y categoría: campos apilados con su etiqueta */
+#tabla-stock .precios{flex:1 1 320px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+#tabla-stock .precios label{display:flex;flex-direction:column;align-items:stretch;gap:4px;font-size:13px}
+#tabla-stock .precios input,
+#tabla-stock .precios select{width:140px}
+
+/* Acciones de stock: botones que se reparten en la fila */
+#tabla-stock .ctl{flex:1 1 320px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#tabla-stock .ctl .btn{flex:1 1 auto}
+#tabla-stock .ctl .num{width:90px;flex:0 0 auto}
+#tabla-stock .ctl .miniatura{flex:0 0 auto}
+
+@media (max-width:640px){
+  #tabla-stock .precios,
+  #tabla-stock .ctl{flex:1 1 100%}
+  #tabla-stock .precios label{flex:1 1 calc(50% - 12px)}
+  #tabla-stock .precios input,
+  #tabla-stock .precios select{width:100%}
+  #tabla-stock .precios .btn{flex:1 1 100%}
+  #tabla-stock .ctl .btn{flex:1 1 calc(50% - 8px)}
+  #tabla-stock .ctl .num{flex:1 1 calc(50% - 8px);width:auto}
+}

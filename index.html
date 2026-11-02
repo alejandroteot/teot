@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="css/movil.css">
 <link rel="stylesheet" href="css/visor.css">
 <link rel="stylesheet" href="css/ofertas.css">
+<link rel="stylesheet" href="css/admin-stock.css">
 </head>
 <body>
 
@@ -83,8 +84,10 @@
 
     <div class="panel">
       <h2>Stock</h2>
+      <input id="buscar-stock" type="search" placeholder="Buscar producto por nombre o categoría…" aria-label="Buscar en stock">
+      <p id="conteo-stock" class="vacio"></p>
       <div class="barra-mover">
-        <label><input type="checkbox" id="sel-todos"> Seleccionar todos</label>
+        <label><input type="checkbox" id="sel-todos"> Seleccionar visibles</label>
         <span id="sel-count">0 seleccionados</span>
         <label>Mover a <select id="mover-a"></select></label>
         <button id="mover-btn" class="btn primario">Mover seleccionados</button>
