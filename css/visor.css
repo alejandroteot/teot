@@ -1,0 +1,30 @@
+/* Visor de fotos a pantalla completa, badge de fotos y galería del personal */
+
+.visor{position:fixed;inset:0;z-index:50;background:rgba(12,10,7,.94);display:grid;grid-template-rows:minmax(0,1fr) auto;color:#f3ede2;touch-action:pan-y}
+.visor[hidden]{display:none!important}
+.visor-escena{min-height:0;display:flex;align-items:center;justify-content:center;padding:calc(56px + env(safe-area-inset-top,0px)) 56px 12px;box-sizing:border-box}
+.visor-escena img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;user-select:none;-webkit-user-drag:none}
+.visor-cerrar{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:12px;z-index:2;width:44px;height:44px;border-radius:50%;border:0;background:rgba(243,237,226,.16);color:#f3ede2;font-size:20px;cursor:pointer}
+.visor-flecha{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:44px;height:44px;border-radius:50%;border:0;background:rgba(243,237,226,.16);color:#f3ede2;font-size:28px;line-height:1;cursor:pointer}
+.visor-flecha.izq{left:8px}
+.visor-flecha.der{right:8px}
+.visor-pie{padding:12px 16px calc(18px + env(safe-area-inset-bottom,0px));text-align:center}
+.visor-pie p{margin:0 0 10px;font-family:Fraunces,Georgia,serif;font-size:20px;font-weight:700}
+.visor-puntos{display:flex;justify-content:center;gap:8px;min-height:10px}
+.visor-puntos span{width:9px;height:9px;border-radius:50%;background:rgba(243,237,226,.35)}
+.visor-puntos span.activo{background:var(--neon)}
+
+/* Indicador de fotos extra sobre la tarjeta */
+.mas-fotos{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px}
+.media{cursor:zoom-in}
+.card h3[data-ver]{cursor:pointer}
+
+/* Galería en el panel del personal */
+#galeria-producto{width:100%}
+#galeria-fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:14px}
+#galeria-fotos > .vacio{grid-column:1/-1}
+.foto-admin{position:relative;margin:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--paper);display:flex;flex-direction:column}
+.foto-admin img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.foto-admin .acc{display:flex;flex-wrap:wrap;gap:6px;padding:8px}
+.foto-admin .acc .btn{flex:1;min-height:36px;padding:6px 8px;font-size:13px}
+.tag-principal{position:absolute;top:8px;left:8px;background:var(--verde);color:var(--paper);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px}

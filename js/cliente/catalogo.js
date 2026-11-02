@@ -1,7 +1,9 @@
 import { estado } from '../estado.js';
 import { $, ars, esc, num } from '../utils.js';
 import { urlFoto } from '../config.js';
+import { fotosDe } from '../datos/fotos.js';
 import { renderCarrito } from './carrito.js';
+import { abrirVisor } from './visor.js';
 
 export function nombreCategoria(){
   const sel = estado.categoriaSeleccionada;
@@ -37,21 +39,24 @@ export function renderCatalogo(){
 
 function tarjeta(p){
   const stock = num(p.stock), en = estado.carrito[p.id] || 0;
-  const media = p.imagen_path
-    ? `<img class="foto" src="${esc(urlFoto(p.imagen_path))}" alt="${esc(p.nombre)}" loading="lazy">`
+  const fotos = fotosDe(p.id);
+  const media = fotos.length
+    ? `<img class="foto" src="${esc(urlFoto(fotos[0].imagen_path))}" alt="${esc(p.nombre)}" loading="lazy">`
     : `<div class="sin-foto" aria-hidden="true">${esc(String(p.nombre).charAt(0).toUpperCase())}</div>`;
+  const mas = fotos.length > 1 ? `<span class="mas-fotos">+${fotos.length - 1} fotos</span>` : '';
   const botones = en
     ? `<button class="btn" data-accion="restar" data-id="${esc(p.id)}" aria-label="Quitar uno">−</button>
        <span>${en}</span>
        <button class="btn" data-accion="sumar" data-id="${esc(p.id)}" aria-label="Agregar uno" ${en >= stock ? 'disabled' : ''}>+</button>`
     : `<button class="btn primario" data-accion="sumar" data-id="${esc(p.id)}" ${stock <= 0 ? 'disabled' : ''}>Comprar</button>`;
   return `<article class="card">
-    <div class="media">
+    <div class="media" data-ver="${esc(p.id)}">
       ${media}
       <span class="pill ${stock > 0 ? 'ok' : 'no'}">${stock > 0 ? 'Disponible' : 'Sin stock'}</span>
+      ${mas}
     </div>
     <div class="cuerpo">
-      <h3>${esc(p.nombre)}</h3>
+      <h3 data-ver="${esc(p.id)}">${esc(p.nombre)}</h3>
       <p class="precio">${ars.format(num(p.precio))}</p>
       <div class="acciones">${botones}</div>
     </div>
@@ -62,6 +67,12 @@ export function initCatalogo(){
   $('#buscar').addEventListener('input', renderCatalogo);
 
   $('#grilla').addEventListener('click', e => {
+    // Tocar la foto o el nombre abre el visor
+    const ver = e.target.closest('[data-ver]');
+    if (ver){
+      abrirVisor(ver.dataset.ver);
+      return;
+    }
     const b = e.target.closest('button[data-accion]');
     if (!b) return;
     const p = estado.productos.find(x => x.id === b.dataset.id);

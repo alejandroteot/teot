@@ -4,6 +4,7 @@ export const estado = {
   ocupado: false,
   productos: [],
   categorias: [],
+  fotos: {},                    // { productoId: [ {id, imagen_path, orden}, ... ] }
   pedidos: [],
   movimientos: [],
   carrito: {},                  // { productoId: cantidad }

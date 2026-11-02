@@ -1,7 +1,7 @@
 import { sb } from '../supabase.js';
 import { $, toast, errorMsg, conBloqueo } from '../utils.js';
 import { registrar } from '../datos/movimientos.js';
-import { subirFoto } from './fotos.js';
+import { agregarFotos } from './stock-acciones.js';
 
 // Carga de producto nuevo. Si tiene stock inicial, queda registrado como alta.
 export function initAlta(){
@@ -19,16 +19,16 @@ export function initAlta(){
         return toast('Completá nombre, precio, costo y stock válidos.', 'error');
       }
       try {
-        const archivo = $('#p-foto').files[0];
-        const imagen_path = archivo ? await subirFoto(archivo) : null;
+        const archivos = [...$('#p-foto').files];
         const {data, error} = await sb.from('productos')
-          .insert({nombre, precio, costo, stock, imagen_path, categoria_id})
+          .insert({nombre, precio, costo, stock, categoria_id})
           .select()
           .single();
         if (error) throw error;
         if (stock > 0){
           await registrar({producto_id: data.id, nombre, tipo: 'alta', cantidad: stock, precio, costo, total: 0});
         }
+        if (archivos.length) await agregarFotos(data.id, archivos);
         e.target.reset();
         toast(`"${nombre}" agregado al catálogo.`);
       } catch (err) {

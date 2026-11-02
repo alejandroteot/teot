@@ -82,3 +82,19 @@ Para publicar cualquier cambio, volvé a ejecutar `bash scripts/publicar.sh`. Gi
 - En `js/config.js` solo va la clave pública (anon). La clave `service_role` nunca va en el proyecto.
 - Las reglas de la base (`supabase/setup.sql`) son las que impiden que cualquiera cambie stock o precios.
 - La contraseña del personal no está en ningún archivo: se valida en Supabase Auth.
+
+## Categorías
+
+- Se crean, renombran y eliminan desde el panel del personal, en la sección **Categorías**.
+- Al eliminar una categoría, sus productos quedan sin categoría. No se borran.
+- Para asignar productos: en la solapa **Stock**, cada producto tiene su selector de categoría, o podés marcar varios con las casillas y usar **Mover seleccionados**.
+- El cliente elige categoría desde el botón de tres líneas, arriba a la izquierda del catálogo.
+- Archivos: `supabase/categorias.sql` (base), `js/datos/categorias.js`, `js/cliente/menu.js`, `js/personal/categorias.js`, `css/categorias.css`.
+
+## Galería de fotos
+
+- Cada producto puede tener varias fotos. La primera es la principal y es la que se ve en el catálogo.
+- En la solapa **Stock**, el botón **Agregar fotos** suma fotos sin reemplazar las que ya están. Se pueden elegir varias a la vez.
+- En el panel **Fotos de productos** se elige un producto para ver sus fotos, cambiar la principal o eliminar alguna.
+- En el catálogo, tocar la foto o el nombre abre el visor a pantalla completa. Se desliza con el dedo, o con las flechas en computadora.
+- Archivos: `supabase/fotos.sql` (base, correr después de `categorias.sql`), `js/datos/fotos.js`, `js/cliente/visor.js`, `js/personal/galeria.js`, `css/visor.css`.

@@ -1,6 +1,7 @@
 import { sb } from '../supabase.js';
 import { estado } from '../estado.js';
 import { num, errorMsg, toast, conBloqueo, pedirConfirmacion } from '../utils.js';
+import { fotosDe } from '../datos/fotos.js';
 import { subirFoto } from './fotos.js';
 
 const MENSAJE = {entrada: 'Stock sumado.', salida: 'Stock restado.', venta: 'Venta registrada.'};
@@ -45,15 +46,23 @@ async function eliminarProducto(id){
   toast(`"${p ? p.nombre : 'Producto'}" eliminado del catálogo.`);
 }
 
-export async function cambiarFoto(id, archivo){
-  try {
-    const imagen_path = await subirFoto(archivo);
-    const {error} = await sb.from('productos').update({imagen_path}).eq('id', id);
-    if (error) throw error;
-    toast('Foto actualizada.');
-  } catch {
-    toast('No se pudo cargar la foto. Probá con otra imagen.', 'error');
+// Agrega fotos a la galería del producto, después de las que ya tiene
+export async function agregarFotos(productoId, archivos){
+  const lista = fotosDe(productoId);
+  let orden = lista.length ? Math.max(...lista.map(f => f.orden)) + 1 : 0;
+  let subidas = 0;
+  for (const archivo of archivos){
+    try {
+      const imagen_path = await subirFoto(archivo);
+      const {error} = await sb.from('producto_fotos').insert({producto_id: productoId, imagen_path, orden});
+      if (error) throw error;
+      orden++;
+      subidas++;
+    } catch {
+      toast(`No se pudo cargar "${archivo.name}".`, 'error');
+    }
   }
+  if (subidas) toast(subidas === 1 ? 'Foto agregada.' : `${subidas} fotos agregadas.`);
 }
 
 // Sirve tanto para un producto como para varios marcados. Devuelve true si salió bien.

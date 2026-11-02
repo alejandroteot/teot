@@ -1,8 +1,9 @@
 import { estado } from '../estado.js';
 import { $, ars, esc, num, toast, conBloqueo } from '../utils.js';
 import { urlFoto } from '../config.js';
+import { fotosDe } from '../datos/fotos.js';
 import { opcionesCategorias } from './categorias.js';
-import { ajustar, guardarPrecios, pedirEliminar, cambiarFoto, cambiarCategoria } from './stock-acciones.js';
+import { ajustar, guardarPrecios, pedirEliminar, agregarFotos, cambiarCategoria } from './stock-acciones.js';
 
 export function renderStock(){
   // Quita de la selección los productos que ya no existen
@@ -22,9 +23,10 @@ export function actualizarBarra(){
 
 function filaProducto(p){
   const marcado = estado.seleccion.has(p.id) ? 'checked' : '';
+  const portada = fotosDe(p.id)[0];
   return `<div class="fila">
     <label class="sel-wrap"><input type="checkbox" class="sel" data-sel="${esc(p.id)}" ${marcado} aria-label="Seleccionar ${esc(p.nombre)}"></label>
-    <div class="info"><strong>${esc(p.nombre)}</strong><span>${ars.format(num(p.precio))} · stock: <b>${num(p.stock)}</b></span></div>
+    <div class="info"><strong>${esc(p.nombre)}</strong><span>${ars.format(num(p.precio))} · stock: <b>${num(p.stock)}</b> · fotos: <b>${fotosDe(p.id).length}</b></span></div>
     <div class="precios">
       <label>Categoría <select data-categoria="${esc(p.id)}">${opcionesCategorias(p.categoria_id)}</select></label>
       <label>Costo $ <input type="number" min="0" step="0.01" data-costo="${esc(p.id)}" value="${num(p.costo)}"></label>
@@ -32,8 +34,8 @@ function filaProducto(p){
       <button class="btn" data-accion="precios" data-id="${esc(p.id)}">Guardar precios</button>
     </div>
     <div class="ctl">
-      ${p.imagen_path ? `<img class="miniatura" src="${esc(urlFoto(p.imagen_path))}" alt="">` : ''}
-      <label class="btn">Foto<input type="file" accept="image/*" class="archivo" data-foto="${esc(p.id)}"></label>
+      ${portada ? `<img class="miniatura" src="${esc(urlFoto(portada.imagen_path))}" alt="">` : ''}
+      <label class="btn">Agregar fotos<input type="file" accept="image/*" multiple class="archivo" data-foto="${esc(p.id)}"></label>
       <input class="num" type="number" min="1" step="1" data-cant="${esc(p.id)}" value="${esc(estado.cantidades[p.id] ?? 1)}" aria-label="Cantidad">
       <button class="btn" data-accion="entrada" data-id="${esc(p.id)}">Sumar stock</button>
       <button class="btn" data-accion="salida" data-id="${esc(p.id)}">Restar stock</button>
@@ -73,10 +75,11 @@ export function initStock(){
       return;
     }
     const inp = e.target.closest('input[data-foto]');
-    if (!inp || !inp.files[0]) return;
-    const archivo = inp.files[0];
+    if (!inp || !inp.files.length) return;
+    const archivos = [...inp.files];
+    const id = inp.dataset.foto;
     inp.value = '';
-    conBloqueo(() => cambiarFoto(inp.dataset.foto, archivo));
+    conBloqueo(() => agregarFotos(id, archivos));
   });
 
   $('#sel-todos').addEventListener('change', e => {
