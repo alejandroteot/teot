@@ -1,5 +1,5 @@
 import { estado } from '../estado.js';
-import { $, ars, esc, num, toast, conBloqueo } from '../utils.js';
+import { $, ars, esc, num, toast, conBloqueo, precioFinal, porcentajeOff } from '../utils.js';
 import { urlFoto } from '../config.js';
 import { fotosDe } from '../datos/fotos.js';
 import { opcionesCategorias } from './categorias.js';
@@ -21,16 +21,25 @@ export function actualizarBarra(){
   $('#sel-todos').checked = estado.productos.length > 0 && n === estado.productos.length;
 }
 
+// Precio para la lista de stock: si hay oferta, muestra el normal y el de oferta
+function infoPrecio(p){
+  if (porcentajeOff(p) > 0){
+    return `${ars.format(num(p.precio))} → <b>${ars.format(precioFinal(p))}</b> (${porcentajeOff(p)}% OFF)`;
+  }
+  return ars.format(num(p.precio));
+}
+
 function filaProducto(p){
   const marcado = estado.seleccion.has(p.id) ? 'checked' : '';
   const portada = fotosDe(p.id)[0];
   return `<div class="fila">
     <label class="sel-wrap"><input type="checkbox" class="sel" data-sel="${esc(p.id)}" ${marcado} aria-label="Seleccionar ${esc(p.nombre)}"></label>
-    <div class="info"><strong>${esc(p.nombre)}</strong><span>${ars.format(num(p.precio))} · stock: <b>${num(p.stock)}</b> · fotos: <b>${fotosDe(p.id).length}</b></span></div>
+    <div class="info"><strong>${esc(p.nombre)}</strong><span>${infoPrecio(p)} · stock: <b>${num(p.stock)}</b> · fotos: <b>${fotosDe(p.id).length}</b></span></div>
     <div class="precios">
       <label>Categoría <select data-categoria="${esc(p.id)}">${opcionesCategorias(p.categoria_id)}</select></label>
       <label>Costo $ <input type="number" min="0" step="0.01" data-costo="${esc(p.id)}" value="${num(p.costo)}"></label>
       <label>Precio $ <input type="number" min="0" step="0.01" data-precio="${esc(p.id)}" value="${num(p.precio)}"></label>
+      <label>Oferta $ <input type="number" min="0" step="0.01" data-oferta="${esc(p.id)}" value="${p.precio_oferta ? num(p.precio_oferta) : ''}" placeholder="sin oferta"></label>
       <button class="btn" data-accion="precios" data-id="${esc(p.id)}">Guardar precios</button>
     </div>
     <div class="ctl">

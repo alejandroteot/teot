@@ -1,0 +1,5 @@
+/* Ofertas: precio normal tachado en gris, precio de oferta y porcentaje de descuento en verde */
+.precio-linea{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px}
+.precio-linea .precio{margin:0}
+.precio-viejo{font-size:clamp(14px,1.2vw,17px);font-weight:600;color:var(--muted);text-decoration:line-through;text-decoration-thickness:2px}
+.off{font-size:clamp(14px,1.2vw,16px);font-weight:800;color:var(--verde)}

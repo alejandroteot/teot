@@ -72,3 +72,16 @@ export function pedirConfirmacion(boton, textoBase, ejecutar){
   }
   ejecutar();
 }
+
+// Precio que paga el cliente: el de oferta si existe y es menor al normal
+export function precioFinal(p){
+  const normal = num(p.precio), oferta = num(p.precio_oferta);
+  return oferta > 0 && oferta < normal ? oferta : normal;
+}
+
+// Porcentaje de descuento (0 si no hay oferta)
+export function porcentajeOff(p){
+  const normal = num(p.precio), final = precioFinal(p);
+  if (normal <= 0 || final >= normal) return 0;
+  return Math.round((1 - final / normal) * 100);
+}

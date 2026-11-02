@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="css/categorias.css">
 <link rel="stylesheet" href="css/movil.css">
 <link rel="stylesheet" href="css/visor.css">
+<link rel="stylesheet" href="css/ofertas.css">
 </head>
 <body>
 
@@ -64,6 +65,7 @@
         <input id="p-precio" type="number" min="0" step="0.01" placeholder="Precio $" required>
         <input id="p-costo" type="number" min="0" step="0.01" placeholder="Precio costo $" required>
         <input id="p-stock" type="number" min="0" step="1" placeholder="Stock inicial" required>
+        <input id="p-oferta" type="number" min="0" step="0.01" placeholder="Precio de oferta $ (opcional)" style="grid-column:1/-1">
         <select id="p-categoria" aria-label="Categoría" style="grid-column:1/-1"></select>
         <input id="p-foto" type="file" accept="image/*" multiple style="grid-column:1/-1">
         <button class="btn primario" type="submit">Agregar al catálogo</button>

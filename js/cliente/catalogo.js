@@ -1,5 +1,5 @@
 import { estado } from '../estado.js';
-import { $, ars, esc, num } from '../utils.js';
+import { $, ars, esc, num, precioFinal, porcentajeOff } from '../utils.js';
 import { urlFoto } from '../config.js';
 import { fotosDe } from '../datos/fotos.js';
 import { renderCarrito } from './carrito.js';
@@ -57,7 +57,7 @@ function tarjeta(p){
     </div>
     <div class="cuerpo">
       <h3 data-ver="${esc(p.id)}">${esc(p.nombre)}</h3>
-      <p class="precio">${ars.format(num(p.precio))}</p>
+      ${bloquePrecio(p)}
       <div class="acciones">${botones}</div>
     </div>
   </article>`;
@@ -92,4 +92,17 @@ export function initCatalogo(){
   document.addEventListener('carrito:cambio', renderCatalogo);
   // El menú avisa cuando el cliente elige una categoría
   document.addEventListener('categoria:cambio', renderCatalogo);
+}
+
+// Con oferta: precio normal tachado, precio de oferta y porcentaje en verde
+function bloquePrecio(p){
+  const normal = num(p.precio), final = precioFinal(p), off = porcentajeOff(p);
+  if (off > 0){
+    return `<div class="precio-linea">
+      <span class="precio-viejo">${ars.format(normal)}</span>
+      <span class="precio">${ars.format(final)}</span>
+      <span class="off">${off}% OFF</span>
+    </div>`;
+  }
+  return `<div class="precio-linea"><span class="precio">${ars.format(normal)}</span></div>`;
 }

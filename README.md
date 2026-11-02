@@ -98,3 +98,10 @@ Para publicar cualquier cambio, volvé a ejecutar `bash scripts/publicar.sh`. Gi
 - En el panel **Fotos de productos** se elige un producto para ver sus fotos, cambiar la principal o eliminar alguna.
 - En el catálogo, tocar la foto o el nombre abre el visor a pantalla completa. Se desliza con el dedo, o con las flechas en computadora.
 - Archivos: `supabase/fotos.sql` (base, correr después de `categorias.sql`), `js/datos/fotos.js`, `js/cliente/visor.js`, `js/personal/galeria.js`, `css/visor.css`.
+
+## Ofertas
+
+- En la solapa **Stock** (y en el alta de producto) se puede cargar un **precio de oferta** opcional. Tiene que ser menor al precio normal. Para quitar la oferta, se borra el campo.
+- En el catálogo, el precio normal aparece tachado en gris, al lado el precio de oferta y el porcentaje de descuento en verde.
+- El carrito, el mensaje de WhatsApp y las ventas usan el precio final.
+- Archivos: `supabase/ofertas.sql` (base, correr después de `fotos.sql`), `css/ofertas.css`.

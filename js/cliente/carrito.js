@@ -1,6 +1,6 @@
 import { sb } from '../supabase.js';
 import { estado } from '../estado.js';
-import { $, ars, esc, num, toast, errorMsg, conBloqueo } from '../utils.js';
+import { $, ars, esc, num, toast, errorMsg, conBloqueo, precioFinal } from '../utils.js';
 import { mensajePedido, abrirWhatsapp } from './whatsapp.js';
 
 export function itemsCarrito(){
@@ -11,7 +11,7 @@ export function itemsCarrito(){
 }
 
 function totalDe(items){
-  return items.reduce((s, {p, c}) => s + num(p.precio) * c, 0);
+  return items.reduce((s, {p, c}) => s + precioFinal(p) * c, 0);
 }
 
 export function renderCarrito(){
@@ -31,7 +31,7 @@ export function renderCarrito(){
   }
   const total = totalDe(items);
   $('#carrito').innerHTML = `<ul>${items.map(({p, c}) =>
-      `<li><span>${esc(p.nombre)} × ${c}</span><span>${ars.format(num(p.precio) * c)}</span></li>`).join('')}</ul>
+      `<li><span>${esc(p.nombre)} × ${c}</span><span>${ars.format(precioFinal(p) * c)}</span></li>`).join('')}</ul>
     <div class="total"><span>Total</span><strong>${ars.format(total)}</strong></div>
     <textarea id="mensaje" class="ancho" rows="5" readonly>${esc(mensajePedido(items, total))}</textarea>`;
   btn.disabled = false;
@@ -57,7 +57,7 @@ async function confirmarPedido(){
 
   const {error} = await sb.from('pedidos').insert({
     cliente: 'Pedido web',
-    items: items.map(({p, c}) => ({id: p.id, nombre: p.nombre, precio: num(p.precio), cantidad: c})),
+    items: items.map(({p, c}) => ({id: p.id, nombre: p.nombre, precio: precioFinal(p), cantidad: c})),
     total: totalDe(items),
     estado: 'pendiente',
   });

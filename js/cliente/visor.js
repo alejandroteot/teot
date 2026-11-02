@@ -1,5 +1,5 @@
 import { estado } from '../estado.js';
-import { $, ars, num } from '../utils.js';
+import { $, ars, precioFinal } from '../utils.js';
 import { urlFoto } from '../config.js';
 import { fotosDe } from '../datos/fotos.js';
 
@@ -15,7 +15,7 @@ export function abrirVisor(productoId){
   const p = estado.productos.find(x => x.id === productoId);
   fotos = lista.map(f => f.imagen_path);
   indice = 0;
-  titulo = p ? `${p.nombre} · ${ars.format(num(p.precio))}` : '';
+  titulo = p ? `${p.nombre} · ${ars.format(precioFinal(p))}` : '';
   renderVisor();
   $('#visor').hidden = false;
   document.body.style.overflow = 'hidden';

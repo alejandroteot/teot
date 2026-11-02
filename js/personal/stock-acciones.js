@@ -25,12 +25,17 @@ export async function guardarPrecios(boton){
   const id = boton.dataset.id;
   const precio = parseFloat(fila.querySelector('[data-precio]').value);
   const costo = parseFloat(fila.querySelector('[data-costo]').value);
+  const ofertaRaw = fila.querySelector('[data-oferta]').value.trim();
+  const precio_oferta = ofertaRaw === '' ? null : parseFloat(ofertaRaw);
   if (!Number.isFinite(precio) || precio < 0 || !Number.isFinite(costo) || costo < 0){
     return toast('Precio y costo tienen que ser números válidos.', 'error');
   }
-  const {error} = await sb.from('productos').update({precio, costo}).eq('id', id);
+  if (precio_oferta !== null && (!Number.isFinite(precio_oferta) || precio_oferta <= 0 || precio_oferta >= precio)){
+    return toast('La oferta tiene que ser un número menor al precio normal.', 'error');
+  }
+  const {error} = await sb.from('productos').update({precio, costo, precio_oferta}).eq('id', id);
   if (error) return toast(errorMsg(error), 'error');
-  toast('Precios actualizados.');
+  toast(precio_oferta === null ? 'Precios actualizados.' : 'Precios y oferta actualizados.');
 }
 
 export function pedirEliminar(boton){

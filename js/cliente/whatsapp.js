@@ -1,10 +1,10 @@
 import { WA_NUMERO } from '../config.js';
-import { num } from '../utils.js';
+import { precioFinal } from '../utils.js';
 
 // Texto del pedido, una línea por producto y el total al final.
 export function mensajePedido(items, total){
   const fmt2 = v => Number.isInteger(v) ? String(v) : v.toFixed(2);
-  const lineas = items.map(({p, c}) => `-${c} ${p.nombre} ${fmt2(num(p.precio) * c)}`);
+  const lineas = items.map(({p, c}) => `-${c} ${p.nombre} ${fmt2(precioFinal(p) * c)}`);
   return ['Hola! mi pedido es', ...lineas, `total ${fmt2(total)}`].join('\n');
 }
 
